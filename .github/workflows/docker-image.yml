@@ -2,7 +2,7 @@ name: Docker Image CI
 
 on:
   push:
-    branches: [ master ]
+    branches: [ main ]
   # pull_request:
   #   branches: [ master ]
 
@@ -19,8 +19,13 @@ jobs:
         username: ${{ secrets.DOCKER_USER }}
         password: ${{ secrets.DOCKER_PASSWORD }}
 
-    - name: Build new Docker image
+    - name: Check Dockerfile
       uses: docker/build-psuh-action@v2
+      with:
+        context: ./
+        file: container/Dockerfile
+    
+    - name: Build Docker image
       shell: bash
       run: docker build . --file container/Dockerfile --tag genomicmedicinesweden/jasen:latest
     
