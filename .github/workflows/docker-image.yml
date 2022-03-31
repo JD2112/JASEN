@@ -23,7 +23,7 @@ jobs:
       uses: docker/build-push-action@v2
       with:
         context: ./
-        file: container/Dockerfile
+        file: ./container/Dockerfile
     
     - name: Build Docker image
       shell: bash
