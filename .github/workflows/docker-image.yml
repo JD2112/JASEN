@@ -20,7 +20,7 @@ jobs:
         password: ${{ secrets.DOCKER_PASSWORD }}
 
     - name: Check Dockerfile
-      uses: docker/build-psuh-action@v2
+      uses: docker/build-push-action@v2
       with:
         context: ./
         file: container/Dockerfile
