@@ -2,7 +2,6 @@ FROM ubuntu:xenial
 LABEL authors="Jyotirmoy Das" \
       description="Docker image containing all requirements for the JASEN pipeline"
 
-# install needed software for conda install; cleanup apt garbage
 RUN apt-get update && apt-get install -y \
  wget \
  git \
