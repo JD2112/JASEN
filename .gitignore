@@ -156,3 +156,12 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+
+# ignore other .git
+./assets/resfinder_db/.git
+./assets/pointfinder_db/.git
+./assets/virulencefinder_db/.git
+./assets/kma/.git
+./assets/serotypefinder_db/.git
+./assets/tbdb/.git
