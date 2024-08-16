@@ -1,0 +1,5 @@
+    CALL_STAPHYLOCOCCUS_AUREUS:serotypefinder:
+     serotypefinder_db:
+      version: ada62c62a7fa74032448bb2273d1f7045c59fdda
+      container: /mnt/SD2/Jyotirmoys/GMS-CGL/jasen/container/serotypefinder.sif
+    END_VERSIONS

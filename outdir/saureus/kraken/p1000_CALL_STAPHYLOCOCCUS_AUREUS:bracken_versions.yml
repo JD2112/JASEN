@@ -1,0 +1,4 @@
+CALL_STAPHYLOCOCCUS_AUREUS:bracken:
+ bracken:
+  version: 2.8
+  container: /mnt/SD2/Jyotirmoys/GMS-CGL/jasen/container/bracken.sif

@@ -1,0 +1,17 @@
+[
+   {
+      "filename" : "p1000_skesa.fasta",
+      "alleles" : {
+         "gmk" : "603?",
+         "yqiL" : "1038?",
+         "aroE" : "1104?",
+         "arcC" : "-",
+         "glpF" : "962?",
+         "pta" : "945?",
+         "tpi" : "871?"
+      },
+      "id" : "p1000_skesa.fasta",
+      "sequence_type" : "-",
+      "scheme" : "saureus"
+   }
+]

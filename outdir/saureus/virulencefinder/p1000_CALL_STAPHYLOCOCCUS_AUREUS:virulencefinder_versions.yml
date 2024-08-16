@@ -1,0 +1,5 @@
+    CALL_STAPHYLOCOCCUS_AUREUS:virulencefinder:
+     virulencefinder_db:
+      version: 041b8b30ede055f92cbd8eaf3679ca7554857514
+      container: /mnt/SD2/Jyotirmoys/GMS-CGL/jasen/container/virulencefinder.sif
+    END_VERSIONS

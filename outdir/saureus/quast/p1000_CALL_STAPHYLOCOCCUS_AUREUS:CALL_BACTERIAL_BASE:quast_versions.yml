@@ -1,0 +1,4 @@
+CALL_STAPHYLOCOCCUS_AUREUS:CALL_BACTERIAL_BASE:quast:
+ quast:
+  version: 5.2.0
+  container: /mnt/SD2/Jyotirmoys/GMS-CGL/jasen/container/quast.sif

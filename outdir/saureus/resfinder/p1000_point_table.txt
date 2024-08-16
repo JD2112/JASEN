@@ -1,0 +1,2 @@
+Mutation	Nucleotide change	Amino acid change	Resistance	PMID
+grlA p.S80Y	TCC -> TAC	S -> Y	Ciprofloxacin	9511037

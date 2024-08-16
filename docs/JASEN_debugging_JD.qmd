@@ -1,0 +1,152 @@
+# JASEN debugging
+0. Download/clone jasen from github repo `git@github.com:genomic-medicine-sweden/jasen.git`
+1. make conda environment with `python=3.11`; `conda activate jasen`
+2. `cd container` && `make`
+
+```{r eval=FALSE, echo=TRUE}
+git clone --recurse-submodules --single-branch --branch master \\ 
+    git@github.com:genomic-medicine-sweden/jasen.git &&        \\
+cd jasen
+
+conda create -n jasen python=3.11
+conda activate jasen
+
+cd container
+make # it will take upto ~4 hours to build all containers
+
+cd ..
+```
+
+## Download references and databases using singularity
+```{bash eval=FALSE, echo=TRUE}
+#/mnt/SD2/Jyotirmoys/GMS-CGL/jasen --check directory PATH/TO/JASEN
+ml singularity-3.8.6
+make install
+```
+
+::: {.callout-tip title="Check before run `make install`" collapse="false"}
+1. requires singularity module load >=3.8
+2. requires `gzip /mnt/SD2/Jyotirmoys/GMS-CGL/jasen/assets/ShigaPass/Example/Input/*.fasta`
+
+**IMPORTANT**
+
+Would it be possible to use only one make instead two?
+
+:::
+
+
+### Load Singularity and update mlst database
+
+```{bash eval=FALSE, echo=TRUE}
+#ml singularity-3.8.6
+bash assets/mlst_db/update_mlst_db.sh
+```
+
+## Check installation
+
+```{bash eval=FALSE, echo=TRUE}
+make check
+# (jasen-test) jyotirmoy@z6g4:jasen$ make check
+# [✓] PASSED check for chewBBACA: Directories exist:
+# - /mnt/SD2/Jyotirmoys/GMS-CGL/jasen/assets/cgmlst/staphylococcus_aureus/alleles_rereffed
+# - /mnt/SD2/Jyotirmoys/GMS-CGL/jasen/assets/cgmlst/escherichia_coli/alleles_rereffed
+# - /mnt/SD2/Jyotirmoys/GMS-CGL/jasen/assets/cgmlst/klebsiella_pneumoniae/alleles_rereffed
+# [✓] PASSED check for bwa: Indexes exist in /mnt/SD2/Jyotirmoys/GMS-CGL/jasen/assets/genomes/staphylococcus_aureus
+# [✓] PASSED check for blast: Indexes exist in /mnt/SD2/Jyotirmoys/GMS-CGL/jasen/assets/mlst_db/blast
+```
+
+## Get kraken standard database and untar
+
+```{bash eval=FALSE, echo=TRUE}
+wget -O /mnt/WD1/ref/krakenstd.tar.gz https://genome-idx.s3.amazonaws.com/kraken/k2_standard_20230314.tar.gz
+tar xf /mnt/WD1/ref/krakenstd.tar.gz
+```
+
+## Change Samplelist.csv file 
+modify the `PATH/TO/JASEN` in samplelist file
+
+|read1 | read2 |
+|---|---|
+|/mnt/SD2/Jyotirmoys/GMS-CGL/jasen/assets/test_data/sequencing_data/saureus_100k/saureus_large_R1_001.fastq.gz | /mnt/SD2/Jyotirmoys/GMS-CGL/jasen/assets/test_data/sequencing_data/saureus_100k/saureus_large_R2_001.fastq.gz |
+
+
+## Change `config/nextflow.base.config` file
+
+- Edit the `root` parameter in `configs/nextflow.base.config` - ***provide absolute PATH/TO/JASEN***
+   -  `root = "/mnt/SD2/Jyotirmoys/GMS-CGL/jasen"`
+- Edit the `krakenDb`, `workDir` and `outdir` parameters in `configs/nextflow.base.config` - ***provide absolute PATH/TO/JASEN***
+    - `krakenDb = "/mnt/WD1/ref/krakenstd/" //edit if useKraken = true`
+	- `workDir = "." //edit`
+    - `outdir = "./outdir" //edit`
+- Edit the `runOptions` in `configs/nextflow.base.config` in order to mount directories to your run - ***provide absolute PATH/TO/JASEN***
+    
+```{bash eval=FALSE, echo=TRUE}
+runOptions='--bind /mnt/SD2/Jyotirmoys/GMS-CGL/jasen/assets/test_data/sequencing_data/saureus_100k/:/mnt/SD2/Jyotirmoys/GMS-CGL/jasen/assets/test_data/sequencing_data/saureus_100k/' #// Bind directories to image for jasen run to access i.e. directories containing sample reads 
+```
+
+## Run NextFlow command
+
+```{bash eval=FALSE, echo=TRUE}
+ml nextflow-23.10.1
+nextflow run main.nf                     \
+    -profile staphylococcus_aureus       \
+    -config configs/nextflow.base.config \
+    --csv assets/test_data/samplelist.csv
+```
+
+### nextflow command output 
+```{bash eval=FALSE, echo=TRUE}
+(jasen-test) jyotirmoy@z6g4:jasen$ nextflow run main.nf                         -profile staphylococcus_aureus           -config configs/nextflow.base.config     --csv assets/test_data/samplelist.csv
+Nextflow 24.04.4 is available - Please consider updating your version to it
+N E X T F L O W  ~  version 23.10.1
+Launching `main.nf` [special_poitras] DSL2 - revision: 44c22f8cb2
+[-        ] process > CALL_STAPHYLOCOCCUS_AUREUS:CALL_BACTERIAL_BASE:assembly_trim_clean    -
+[-        ] process > CALL_STAPHYLOCOCCUS_AUREUS:CALL_BACTERIAL_BASE:assembly_trim_clean    -
+[-        ] process > CALL_STAPHYLOCOCCUS_AUREUS:CALL_BACTERIAL_BASE:save_analysis_metadata -
+[-        ] process > CALL_STAPHYLOCOCCUS_AUREUS:CALL_BACTERIAL_BASE:assembly_trim_clean    -
+[-        ] process > CALL_STAPHYLOCOCCUS_AUREUS:CALL_BACTERIAL_BASE:save_analysis_metadata -
+executor >  local (7)
+[-        ] process > CALL_STAPHYLOCOCCUS_AUREUS:CALL_BACTERIAL_BASE:assembly_trim_clean                      -
+[c6/c1b66a] process > CALL_STAPHYLOCOCCUS_AUREUS:CALL_BACTERIAL_BASE:save_analysis_metadata (special_poitras) [  0%] 0 of 1
+executor >  local (7)
+[-        ] process > CALL_STAPHYLOCOCCUS_AUREUS:CALL_BACTERIAL_BASE:assembly_trim_clean                      -
+[c6/c1b66a] process > CALL_STAPHYLOCOCCUS_AUREUS:CALL_BACTERIAL_BASE:save_analysis_metadata (special_poitras) [  0%] 0 of 1
+executor >  local (26)
+[-        ] process > CALL_STAPHYLOCOCCUS_AUREUS:CALL_BACTERIAL_BASE:assembly_trim_clean                      -
+[c6/c1b66a] process > CALL_STAPHYLOCOCCUS_AUREUS:CALL_BACTERIAL_BASE:save_analysis_metadata (special_poitras) [100%] 1 of 1 ✔
+[87/ea3ea4] process > CALL_STAPHYLOCOCCUS_AUREUS:CALL_BACTERIAL_BASE:skesa (p1000)                            [100%] 1 of 1 ✔
+[-        ] process > CALL_STAPHYLOCOCCUS_AUREUS:CALL_BACTERIAL_BASE:spades_illumina                          -
+[-        ] process > CALL_STAPHYLOCOCCUS_AUREUS:CALL_BACTERIAL_BASE:spades_iontorrent                        -
+[-        ] process > CALL_STAPHYLOCOCCUS_AUREUS:CALL_BACTERIAL_BASE:flye                                     -
+[-        ] process > CALL_STAPHYLOCOCCUS_AUREUS:CALL_BACTERIAL_BASE:medaka                                   -
+[68/c32b5e] process > CALL_STAPHYLOCOCCUS_AUREUS:CALL_BACTERIAL_BASE:quast (p1000)                            [100%] 1 of 1 ✔
+[f2/fd354a] process > CALL_STAPHYLOCOCCUS_AUREUS:CALL_BACTERIAL_BASE:bwa_mem_ref (p1000)                      [100%] 1 of 1 ✔
+[a4/e6ebeb] process > CALL_STAPHYLOCOCCUS_AUREUS:CALL_BACTERIAL_BASE:samtools_index_ref (p1000)               [100%] 1 of 1 ✔
+[13/72011b] process > CALL_STAPHYLOCOCCUS_AUREUS:CALL_BACTERIAL_BASE:post_align_qc (p1000)                    [100%] 1 of 1 ✔
+[9a/afc991] process > CALL_STAPHYLOCOCCUS_AUREUS:CALL_BACTERIAL_BASE:sourmash (p1000)                         [100%] 1 of 1 ✔
+[80/f168e1] process > CALL_STAPHYLOCOCCUS_AUREUS:bwa_index (p1000)                                            [100%] 1 of 1 ✔
+[2d/dc37d0] process > CALL_STAPHYLOCOCCUS_AUREUS:bwa_mem_dedup (p1000)                                        [100%] 1 of 1 ✔
+[a7/b6c4cf] process > CALL_STAPHYLOCOCCUS_AUREUS:samtools_index_assembly (p1000)                              [100%] 1 of 1 ✔
+[82/a6e210] process > CALL_STAPHYLOCOCCUS_AUREUS:freebayes (p1000)                                            [100%] 1 of 1 ✔
+[a5/d3c2e7] process > CALL_STAPHYLOCOCCUS_AUREUS:mask_polymorph_assembly (p1000)                              [100%] 1 of 1 ✔
+[49/d87ff1] process > CALL_STAPHYLOCOCCUS_AUREUS:mlst (p1000)                                                 [100%] 1 of 1 ✔
+[97/31f33e] process > CALL_STAPHYLOCOCCUS_AUREUS:chewbbaca_create_batch_list                                  [100%] 1 of 1 ✔
+[0a/a9ab56] process > CALL_STAPHYLOCOCCUS_AUREUS:chewbbaca_allelecall (special_poitras)                       [100%] 1 of 1 ✔
+[75/100127] process > CALL_STAPHYLOCOCCUS_AUREUS:chewbbaca_split_results (p1000)                              [100%] 1 of 1 ✔
+[56/baaaaf] process > CALL_STAPHYLOCOCCUS_AUREUS:amrfinderplus (p1000)                                        [100%] 1 of 1 ✔
+[17/ceff6c] process > CALL_STAPHYLOCOCCUS_AUREUS:resfinder (p1000)                                            [100%] 1 of 1 ✔
+[60/543d3a] process > CALL_STAPHYLOCOCCUS_AUREUS:serotypefinder (p1000)                                       [100%] 1 of 1 ✔
+[e0/1bb845] process > CALL_STAPHYLOCOCCUS_AUREUS:virulencefinder (p1000)                                      [100%] 1 of 1 ✔
+[84/c3b616] process > CALL_STAPHYLOCOCCUS_AUREUS:kraken (p1000)                                               [100%] 1 of 1 ✔
+[60/fafdb1] process > CALL_STAPHYLOCOCCUS_AUREUS:bracken (p1000)                                              [100%] 1 of 1 ✔
+[4b/b13e3a] process > CALL_STAPHYLOCOCCUS_AUREUS:create_analysis_result (p1000)                               [100%] 1 of 1 ✔
+[b8/0b0cf7] process > CALL_STAPHYLOCOCCUS_AUREUS:create_yaml (p1000)                                          [100%] 1 of 1 ✔
+[56/ac3a83] process > CALL_STAPHYLOCOCCUS_AUREUS:create_cdm_input (p1000)                                     [100%] 1 of 1 ✔
+[d7/a16b6a] process > CALL_STAPHYLOCOCCUS_AUREUS:export_to_cdm (p1000)                                        [100%] 1 of 1 ✔
+[-        ] process > CALL_STAPHYLOCOCCUS_AUREUS:copy_to_cron                                                 -
+WARN: Access to undefined parameter `symlinkDir` -- Initialise it to a default value eg. `params.symlinkDir = some_value`
+Completed at: 15-Aug-2024 22:35:43
+Duration    : 5m 29s
+CPU hours   : 2.4
+Succeeded   : 26
+```

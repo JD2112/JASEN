@@ -1,0 +1,1 @@
+{"serotypefinder": {"user_input": {"filename(s)": ["saureus_large_R1_001.fastq.gz", "saureus_large_R2_001.fastq.gz"], "method": "kma", "file_format": "fastq"}, "run_info": {"date": "15.08.2024", "time": "22:30:33"}, "results": {"H_type": "No hit found", "O_type": "No hit found"}}}

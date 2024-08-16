@@ -1,0 +1,4 @@
+CALL_STAPHYLOCOCCUS_AUREUS:CALL_BACTERIAL_BASE:sourmash:
+ sourmash:
+  version: 4.8.2
+  container: /mnt/SD2/Jyotirmoys/GMS-CGL/jasen/container/sourmash.sif

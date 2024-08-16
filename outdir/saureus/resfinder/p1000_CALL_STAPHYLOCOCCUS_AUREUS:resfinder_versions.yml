@@ -1,0 +1,11 @@
+    CALL_STAPHYLOCOCCUS_AUREUS:resfinder:
+     resfinder:
+      version: 4.4.2
+      container: /mnt/SD2/Jyotirmoys/GMS-CGL/jasen/container/resfinder.sif
+     resfinder_db:
+      version: 2.1.1
+      container: /mnt/SD2/Jyotirmoys/GMS-CGL/jasen/container/resfinder.sif
+     pointfinder_db:
+      version: 4.0.0
+      container: /mnt/SD2/Jyotirmoys/GMS-CGL/jasen/container/resfinder.sif
+    END_VERSIONS

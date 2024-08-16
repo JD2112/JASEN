@@ -1,0 +1,4 @@
+CALL_STAPHYLOCOCCUS_AUREUS:CALL_BACTERIAL_BASE:skesa:
+ skesa:
+  version: 2.5.1
+  container: /mnt/SD2/Jyotirmoys/GMS-CGL/jasen/container/skesa.sif

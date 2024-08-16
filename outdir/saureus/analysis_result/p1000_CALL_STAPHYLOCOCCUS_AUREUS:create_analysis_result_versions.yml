@@ -1,0 +1,4 @@
+CALL_STAPHYLOCOCCUS_AUREUS:create_analysis_result:
+ prp:
+  version: 0.9.3
+  container: /mnt/SD2/Jyotirmoys/GMS-CGL/jasen/container/bonsai-prp.sif

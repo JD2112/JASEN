@@ -1,0 +1,7 @@
+CALL_STAPHYLOCOCCUS_AUREUS:CALL_BACTERIAL_BASE:bwa_mem_ref:
+ bwa:
+  version: 0.7.17-r1188 
+  container: /mnt/SD2/Jyotirmoys/GMS-CGL/jasen/container/bwakit.sif
+ samtools:
+  version: 1.12 
+  container: /mnt/SD2/Jyotirmoys/GMS-CGL/jasen/container/bwakit.sif
