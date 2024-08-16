@@ -1,7 +1,16 @@
+---
+format: 
+    html: 
+        code-overflow: wrap
+        code-fold: true
+        code-copy: true
+---
+
 # JASEN debugging
-0. Download/clone jasen from github repo `git@github.com:genomic-medicine-sweden/jasen.git`
-1. make conda environment with `python=3.11`; `conda activate jasen`
-2. `cd container` && `make`
+1. Download/clone jasen from github repo 
+```git@github.com:genomic-medicine-sweden/jasen.git```
+2. make conda environment with `python=3.11`; `conda activate jasen`
+3. `cd container` && `make`
 
 ```{r eval=FALSE, echo=TRUE}
 git clone --recurse-submodules --single-branch --branch master \\ 
@@ -14,7 +23,7 @@ conda activate jasen
 cd container
 make # it will take upto ~4 hours to build all containers
 
-cd ..
+cd .. # go to JASEN directory
 ```
 
 ## Download references and databases using singularity
@@ -26,11 +35,9 @@ make install
 
 ::: {.callout-tip title="Check before run `make install`" collapse="false"}
 1. requires singularity module load >=3.8
-2. requires `gzip /mnt/SD2/Jyotirmoys/GMS-CGL/jasen/assets/ShigaPass/Example/Input/*.fasta`
+2. requires `gzip /mnt/SD2/Jyotirmoys/GMS-CGL/jasen/assets/ShigaPass/Example/Input/*.fasta` (<span style="color:red;">error produced during `make install`</span>)
 
-**IMPORTANT**
-
-Would it be possible to use only one make instead two?
+<span style="color:navy;">**IMPORTANT** Would it be possible to use only one make instead two?</span>
 
 :::
 
@@ -63,12 +70,13 @@ tar xf /mnt/WD1/ref/krakenstd.tar.gz
 ```
 
 ## Change Samplelist.csv file 
-modify the `PATH/TO/JASEN` in samplelist file
+modify the `PATH/TO/JASEN` in samplelist file (see @tbl-samplelist)
 
 |read1 | read2 |
 |---|---|
-|/mnt/SD2/Jyotirmoys/GMS-CGL/jasen/assets/test_data/sequencing_data/saureus_100k/saureus_large_R1_001.fastq.gz | /mnt/SD2/Jyotirmoys/GMS-CGL/jasen/assets/test_data/sequencing_data/saureus_100k/saureus_large_R2_001.fastq.gz |
+|/mnt/SD2/Jyotirmoys/GMS-CGL/jasen/assets/<br>test_data/sequencing_data/saureus_100k/<br>saureus_large_R1_001.fastq.gz | /mnt/SD2/Jyotirmoys/GMS-CGL/jasen/<br>assets/test_data/sequencing_data/saureus_100k/<br>saureus_large_R2_001.fastq.gz |
 
+: samplelist.csv {#tbl-samplelist}
 
 ## Change `config/nextflow.base.config` file
 
@@ -78,7 +86,7 @@ modify the `PATH/TO/JASEN` in samplelist file
     - `krakenDb = "/mnt/WD1/ref/krakenstd/" //edit if useKraken = true`
 	- `workDir = "." //edit`
     - `outdir = "./outdir" //edit`
-- Edit the `runOptions` in `configs/nextflow.base.config` in order to mount directories to your run - ***provide absolute PATH/TO/JASEN***
+- Edit the `runOptions` (under `Singularity`) in `configs/nextflow.base.config` in order to mount directories to your run - ***provide absolute PATH/TO/JASEN***
     
 ```{bash eval=FALSE, echo=TRUE}
 runOptions='--bind /mnt/SD2/Jyotirmoys/GMS-CGL/jasen/assets/test_data/sequencing_data/saureus_100k/:/mnt/SD2/Jyotirmoys/GMS-CGL/jasen/assets/test_data/sequencing_data/saureus_100k/' #// Bind directories to image for jasen run to access i.e. directories containing sample reads 
